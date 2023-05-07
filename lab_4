@@ -1,0 +1,70 @@
+class Human: #1
+    default_name = 'A' #2
+    default_age = 20
+
+    def __init__(self, name=default_name, age=default_age): #3
+        self.name = name #публичные
+        self.age = age
+        self.__money = 0 #приватные
+        self.__house = None
+
+    def info(self): #4
+        return f'name: {self.name}\nage: {self.age}\nmoney: {self.__money}\nhouse: {self.__house}'
+
+    @staticmethod
+    def default_info(name=default_name, age=default_age): #5
+        return f'default_name: {name}\ndefault_age: {age} '
+
+    def __make_deal(self, house, price): #6
+        self.__house = house
+        self.price = price
+        return f'Куплен {self.__house} за {self.price}'
+
+    def earn_money(self, money): #7
+        self.__money += money
+
+    def buy_house(self, house): #8
+        if self.__money<house.price:
+            return f'Не хватает денег. Нужно еще {self.__money - house.price}'
+        else:
+            cost = house.price
+            self.__money -= cost
+            return self.__make_deal(house, cost)
+
+    def __repr__(self):
+        return f'default_name: {self.name}\ndefault_age: {self.age} '
+
+    def __str__(self):
+        return f'default_name: {self.name}\ndefault_age: {self.age} '
+
+class House: #9(1)
+    def __init__(self, area=0, price=0): #9(2)
+        self._area = area
+        self._price = price
+
+    def final_price(self, sale): #9(3)
+        self._price -= sale
+        return self._price
+
+    @property
+    def price(self):
+        return self._price
+
+    def __repr__(self):
+        return f'Дом с площадью: {self._area}'
+
+class SmallHouse(House): #10(1)
+    def __init__(self, area=40, price=0): #10(2)
+        self._area = area
+        self._price = price
+
+#тест
+print(Human.default_info())
+hum = Human('Kaya', 22)
+print(hum.info())
+ks = SmallHouse(price=30000)
+print(ks.final_price(3000))
+print(hum.buy_house(ks))
+hum.earn_money(40000)
+print(hum.buy_house(ks))
+print(hum.info())
